@@ -1,0 +1,8 @@
+hadoop fs -mkdir /bourgeois/csv_files
+
+wget https://github.com/Lucie6CA/Projet_3A_Voiture/blob/main/CSV/Marketing.csv
+hadoop fs -put Marketing.csv /bourgeois/csv_files
+
+hadoop fs -ls /bourgeois/csv_files
+
+
