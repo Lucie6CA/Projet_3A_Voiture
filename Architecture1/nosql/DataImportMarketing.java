@@ -155,7 +155,7 @@ public class DataImportMarketing {
             // the store.
 
             // Create one row 
-            //marketingRow.put("clientMarketingID", clientID);
+            marketingRow.put("clientMarketingID", clientID);
             marketingRow.put("age", age);
             marketingRow.put("sexe", sexe);
             marketingRow.put("taux", taux);
@@ -197,12 +197,13 @@ public class DataImportMarketing {
             /* open text file to read data */
             //parcourir le fichier ligne par ligne et découper chaque ligne en 
             //morceau séparés par le symbole ;
-
-            while ((ligne = br.readLine()) != null) {
+            br.readLine();
+            String line = null;
+            while ((line = br.readLine()) != null) {
                 //int situationFamiliale, 2eme voiture, nbPortes, prix; 
                 //String marketing, age, sexe,  nbEnfantsAcharge,  couleur, occasion, ;
                 ArrayList<String> marketingRecord = new ArrayList<String>();
-                StringTokenizer val = new StringTokenizer(ligne, ",");
+                StringTokenizer val = new StringTokenizer(line, ",");
                 while (val.hasMoreTokens()) {
                     marketingRecord.add(val.nextToken().toString());
                 }

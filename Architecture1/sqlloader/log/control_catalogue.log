@@ -1,0 +1,9 @@
+
+SQL*Loader: Release 19.0.0.0.0 - Production on Lun. Mars 22 17:31:17 2021
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+
+SQL*Loader-128 : impossible de démarrer une session
+ORA-01017: nom utilisateur/mot de passe non valide ; connexion refusée
+

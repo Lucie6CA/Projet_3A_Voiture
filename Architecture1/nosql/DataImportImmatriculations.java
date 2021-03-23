@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
 
 public class DataImportImmatriculation {
     private final KVStore store;
-    private final String tabImmatriculation = "IMMATRICULATION";
+    private final String tabImmatriculation = "IMMATRICULATIONS";
     private final String pathToCSVFile = "/home/CARRON/Projet3AMBDS/CSV/Immatriculations.csv";
 
     /**
@@ -104,13 +104,13 @@ public class DataImportImmatriculation {
                 + "IMMATRICULATION STRING,"
                 + "MARQUE STRING,"
                 + "NOM STRING,"
-                + "PUISSANCE INTEGER,"
+                + "PUISSANCE STRING,"
                 + "LONGUEUR STRING,"
-                + "NBPLACES INTEGER,"
-                + "NBPORTES INTEGER,"
+                + "NBPLACES STRING,"
+                + "NBPORTES STRING,"
                 + "COULEUR STRING,"
                 + "OCCASION STRING," //boolean mais on conserve en string
-                + "PRIX INTEGER,"
+                + "PRIX STRING,"
                 + "PRIMARY KEY (IMMATRICULATION))";
         executeDDL(statement);
     }
@@ -138,7 +138,7 @@ public class DataImportImmatriculation {
         }
     }
 
-    private void insertAimmatriculationRow(String immatriculationID, String marque, String nom, int puissance, String longueur, int nbPlaces, int nbPortes, String couleur, String occasion, int prix) {
+    private void insertAimmatriculationRow(String immatriculationID, String marque, String nom, String puissance, String longueur, String nbPlaces, String nbPortes, String couleur, String occasion, String prix) {
         //TableAPI tableAPI = store.getTableAPI();
         StatementResult result = null;
         String statement = null;
@@ -213,13 +213,13 @@ public class DataImportImmatriculation {
                 String immatriculationID = immatriculationRecord.get(0);
                 String marque = immatriculationRecord.get(1);
                 String nom = immatriculationRecord.get(2);
-                int puissance = Integer.parseInt(immatriculationRecord.get(3));
+                String puissance = immatriculationRecord.get(3);
                 String longueur = immatriculationRecord.get(4);
-                int nbPlaces = Integer.parseInt(immatriculationRecord.get(5));
-                int nbPortes = Integer.parseInt(immatriculationRecord.get(6));
+                String nbPlaces = immatriculationRecord.get(5);
+                String nbPortes = immatriculationRecord.get(6);
                 String couleur = immatriculationRecord.get(7);
                 String occasion = immatriculationRecord.get(8);
-                int prix = Integer.parseInt(immatriculationRecord.get(9));
+                String prix = immatriculationRecord.get(9);
                 // Add the immatriculation in the KVStore
                 this.insertAimmatriculationRow(immatriculationID, marque, nom, puissance, longueur, nbPlaces, nbPortes, couleur, occasion, prix);
             }
