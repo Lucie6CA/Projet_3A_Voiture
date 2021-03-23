@@ -1,8 +1,146 @@
-hadoop fs -mkdir /bourgeois/csv_files
+**********************************************************
+(Créer un répertoire pour y mettre les fichiers:
+hdfs dfs -mkdir /groupe5
 
+Pour l'architecture 1:
+hdfs dfs -mkdir /groupe5/archi1
+
+Pour l'architecture 2:
+hdfs dfs -mkdir /groupe5/archi2
+
+Télecharger et mettre les fichiers sur hdfs:
 wget https://github.com/Lucie6CA/Projet_3A_Voiture/blob/main/CSV/Marketing.csv
-hadoop fs -put Marketing.csv /bourgeois/csv_files
+hadoop fs -put Marketing.csv /bourgeois/csv_files)
 
-hadoop fs -ls /bourgeois/csv_files
+J'utilise WinSCP pour mettre mes fichiers sur ma machine locale, puis je les copie sur HDFS:
+
+Pour l'archi 1:
+hdfs dfs -put Catalogue.csv /groupe5/archi2
+hdfs dfs -put Immatriculations.csv /groupe5/archi2
+
+Pour l'archi 2 on utilise les fichiers:
+hdfs dfs -put Marketing.csv /groupe5/archi2
+hdfs dfs -put Catalogue.csv /groupe5/archi2
+hdfs dfs -put CO2.csv /groupe5/archi2
+hdfs dfs -put Clients_5.csv /groupe5/archi2
+hdfs dfs -put Immatriculations.csv /groupe5/archi2
+
+Vérifier que les fichiers sont bien à leur place:
+hdfs dfs -ls /groupe5/archi2
+hdfs dfs -ls /groupe5/archi1
+
+
+Pour avoir des informations détaillées sur chacuns des datanodes:
+hdfs dfsadmin -report (pas optimiser pour hdfs)
+
+Obtenir des informations sur l'état du système de fichiers:
+hdfs fsck /
+hdfs fsck /groupe5
+
+*********************************************************************
+On cherche ensuite, pour l'architecture 1, à créer les tables externes HIVE Issues des données de Immatriculation et Catalogue:
+
+beeline[oracle@bigdatalite ~]$ beeline
+Beeline version 1.1.0-cdh5.4.0 by Apache Hive 
+
+-- Se connecter à HIVE
+beeline> !connect jdbc:hive2://localhost:10000
+ 
+Enter username for jdbc:hive2://localhost:10000: oracle
+Enter password for jdbc:hive2://localhost:10000: ********
+(password : welcome1)
+ 
+-- Supprimer la table MARKETING si elle existe déjà
+jdbc:hive2://localhost:10000> drop table CLIENT_HDFS_EXT; 
+ 
+-- Création de la table externe IMMATRICULATIONS_HDFS_EXT pointant vers HDFS
+--table externe Hive IMMATRICULATIONS_HDFS_EXT et de la table externe  
+--CATALOGUE_HDFS_EXT pointant vers HDFS table externe Hive CATALOGUE_HDFS_EXT
+
+drop table IMMATRICULATIONS_HDFS_EXT;
+
+CREATE EXTERNAL TABLE  IMMATRICULATIONS_HDFS_EXT  (IMMATRICULATION string, MARQUE string, NOM string, PUISSANCE int, LONGUEUR string, NBPLACES int, NBPORTES int, COULEUR string, OCCASION string, PRIX int)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE LOCATION 'hdfs:/groupe5/archi1';
+
+drop table CATALOGUE_HDFS_EXT;
+
+CREATE EXTERNAL TABLE  CATALOGUE_HDFS_EXT  (MARQUE string, NOM string, PUISSANCE int, LONGUEUR string, NBPLACES int, NBPORTES int, COULEUR string, OCCASION string, PRIX int)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE LOCATION 'hdfs:/groupe5/archi1';
+
+-- Vérification du contenu des tables externes dans HIVE
+
+select MARQUE, NOM, PUISSANCE, LONGUEUR from IMMATRICULATIONS_HDFS_EXT where IMMATRICULATION='9925 TY 41';
+
+select * from CATALOGUE_HDFS_EXT where prix<8000;
+
+************************************************************************
+--Créer les tables externes Oracle SQL pointant vers les tables externes HIVE
+
+--Se connecter à sqlplus
+
+sqlplus BOURGEOISBZ2021@ORCL/BOURGEOISBZ202101
+
+
+--Supprimer les tables si elles existent
+
+drop table IMMATRICULATIONS_O_EXT;
+drop table CATALOGUE_O_EXT;
+
+--créer la table IMMATRICULATIONS_O_EXT
+
+CREATE TABLE  IMMATRICULATIONS_O_EXT(
+IMMATRICULATION varchar2(10), 
+MARQUE varchar2(40), 
+NOM varchar2(40), 
+PUISSANCE number, 
+LONGUEUR varchar2(40), 
+NBPLACES number, 
+NBPORTES number, 
+COULEUR varchar2(40), 
+OCCASION varchar2(40), 
+PRIX number
+)
+ORGANIZATION EXTERNAL (
+TYPE ORACLE_HIVE 
+DEFAULT DIRECTORY   ORACLE_BIGDATA_CONFIG
+ACCESS PARAMETERS 
+(
+com.oracle.bigdata.tablename=default.IMMATRICULATIONS_HDFS_EXT
+)
+) 
+REJECT LIMIT UNLIMITED;
+
+--créer la table CATALOGUE_O_EXT
+
+CREATE TABLE  CATALOGUE_O_EXT(
+MARQUE varchar2(40), 
+NOM varchar2(40), 
+PUISSANCE number, 
+LONGUEUR varchar2(40), 
+NBPLACES number, 
+NBPORTES number, 
+COULEUR varchar2(40), 
+OCCASION varchar2(40), 
+PRIX number
+)
+ORGANIZATION EXTERNAL (
+TYPE ORACLE_HIVE 
+DEFAULT DIRECTORY   ORACLE_BIGDATA_CONFIG
+ACCESS PARAMETERS 
+(
+com.oracle.bigdata.tablename=default.CATALOGUE_HDFS_EXT
+)
+) 
+REJECT LIMIT UNLIMITED;
+
+--Vérifier que les tables ont bien été créées
+
+select MARQUE, NOM, PUISSANCE, LONGUEUR from IMMATRICULATIONS_O_EXT where IMMATRICULATION='9925 TY 41'; 1880 QZ 82
+
+select * from CATALOGUE_O_EXT where prix<8000;
+
+
 
 
