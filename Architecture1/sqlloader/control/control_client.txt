@@ -1,0 +1,14 @@
+LOAD DATA
+INFILE '$MYPROJECTHOME/CSV/Client_5.csv'
+INSERT INTO TABLE CLIENT
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '""'
+TRAILING NULLCOLS
+(
+age,
+sexe,
+taux,
+situationFamiliale,
+nbEnfantsACharge,
+xVoiture,
+immatriculation
+)
