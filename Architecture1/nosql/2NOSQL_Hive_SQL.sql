@@ -120,7 +120,7 @@ TBLPROPERTIES (
 
 --Se connecter à sqlplus
 
-sqlplus CARONBZ2021@ORCL/CARONBZ202101
+
 
 
 --Supprimer les tables si elles existent
@@ -171,6 +171,15 @@ CARONBZ2021                    IMMATRICULATIONS_O_EXT
 CARONBZ2021                    MARKETING_O_EXT
 */
 
+col CLIENTMARKETINGID format A20
+col AGE format A20
+col SEXE format A20
+col TAUX format A20
+col SITUATIONFAMILIALE format A20
+col NBENFANTSACHARGE format A20
+col DEUXIEMEVOITURE format A20
+
+SELECT * FROM MARKETING_O_EXT;
 
 
 
