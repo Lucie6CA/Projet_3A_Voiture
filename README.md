@@ -15,7 +15,7 @@
     <br>
   -visualisation et création de matrices
   
-  # Hadoop MAP REDUCE :
+  # Hadoop MAP REDUCE 
   
   
   
